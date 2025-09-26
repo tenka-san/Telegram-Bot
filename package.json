@@ -1,0 +1,17 @@
+{
+  "name": "7-Bot",
+  "version": "latest",
+  "author": "D | 7eppeli-Yuukey",
+  "licence": "MIT",
+  "main": "./index.js",
+  "scripts": {
+    "start": "node ./index.js"
+  },
+  "dependencies": {
+    "telegraf": "^4.16.3",
+    "fs": "0.0.1-security",
+    "axios": "^1.12.2",
+    "node-fetch": "^3.3.2",
+    "path": "^0.12.7"
+  }
+}
