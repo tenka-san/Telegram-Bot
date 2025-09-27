@@ -19,6 +19,7 @@ Menu yang sudah di sediakan :
 => /ytmp4
 => /tourl
 => /pinterest
+=> /ytstalk
 \`\`\``;
 // Commands
 bot.start((ctx) => {
@@ -85,12 +86,12 @@ bot.command("spotify", async(ctx) => {
   const urlLagu = await axios.get(`https://api.siputzx.my.id/api/d/spotifyv2?url=${encodeURIComponent(hasil.track_url)}`);
   const dLagu = urlLagu.data;
   const caption = `\`\`\`
-  🎵 *Title:* ${track.title}
-  🎤 *Artist:* ${track.artist}
-  ⏱️ *Duration:* ${track.duration}
-  💿 *Album:* ${track.album}
-  📅 *Release Date:* ${track.release_date}
-  🔗 *Spotify URL:* ${track.track_url}
+  🎵 *Title:* ${hasil.title}
+  🎤 *Artist:* ${hasil.artist}
+  ⏱️ *Duration:* ${hasil.duration}
+  💿 *Album:* ${hasil.album}
+  📅 *Release Date:* ${hasil.release_date}
+  🔗 *Spotify URL:* ${hasil.track_url}
   \`\`\``;
 
   ctx.replyWithAudio(dLagu.mp3DownloadLink, {
@@ -101,6 +102,41 @@ bot.command("spotify", async(ctx) => {
         {
           text: "Lets Dance",
           callback_data: "Bwabwa"
+        }
+      ]]
+    }
+  });
+})
+
+bot.command("yts", async(ctx) => {
+  const args = ctx.message.text.split(" ")
+  const teks = args[1];
+  const res = axios.get(`https://api.siputzx.my.id/api/s/youtube?query=${encodeURIComponent(teks)}`);
+  const data = res.data;
+  const hasil = data.data[0];
+  const urlLagu = await axios.get(`https://api.siputzx.my.id/api/d/spotifyv2?url=${encodeURIComponent(hasil.track_url)}`);
+  const dLagu = urlLagu.data;
+  const caption = `\`\`\`
+  Title: ${hasil.title}
+  Author: ${hasil.author.name}
+  Duration: ${hasil.duration.seconds}
+  Views: ${hasil.views}
+  Release Date: ${hasil.ago}
+  URL: ${hasil.url}
+  \`\`\``;
+
+  ctx.replyWithPhoto(hasil.image, {
+    caption: caption,
+    parse_mode: "MarkdownV2",
+    reply_markup: {
+      inline_keyboard: [[
+        {
+          text: "Download mp3",
+          callback_data: "ytmp3"
+        },
+        {
+          text: "Download mp4",
+          callback_data: "ytmp4"
         }
       ]]
     }
