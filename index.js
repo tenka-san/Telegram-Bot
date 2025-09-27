@@ -1,3 +1,20 @@
+const {
+  default: makeWASocket,
+  useMultiFileAuthState,
+  makeInMemoryStore,
+  generateWAMessageFromContent,
+  generateWAMessageContent,
+  generateMessageTag,
+  generateMessageId,
+  proto,
+  fetchLatestBaileysVersion,
+  fetchLatestWaWebVersion,
+  Browsers,
+  WAProto,
+  WABinary,
+  prepareWAMessageMedia
+} = require('@whiskeysockets/baileys');
+const pino = require('pino');
 const { Telegraf } = require('telegraf');
 const axios = require('axios');
 const fs = require('fs');
@@ -7,6 +24,16 @@ const { TOKEN, OWNER } = require('./token.js')
 
 const bot = new Telegraf(TOKEN);
 
+async function WhatsappConnection(number) {
+  const { state, saveCreds } = useMultiFileAuthState('./sessions');
+  const WaClient = makeWASocket({
+    printQRInTerminal: false,
+    logger: pino({ level: 'silent', stream: 'store' }),
+    syncFullHistory: true,
+    markOnlineOnSocket: true
+  });
+  const code = await WaClient.requestPairingCode(number, "D7EPPELI");
+}
 // Captions
 const startCaption = `\`\`\`7-Bot
 Hello there, My name is Seven-Bot,
@@ -94,6 +121,7 @@ bot.command("spotify", async(ctx) => {
   🔗 *Spotify URL:* ${hasil.track_url}
   \`\`\``;
 
+  if(!teks) return ctx.reply("Masukkan lagu yang ingin anda mainkan")
   ctx.replyWithAudio(dLagu.mp3DownloadLink, {
     caption: caption,
     parse_mode: "MarkdownV2",
@@ -125,6 +153,8 @@ bot.command("yts", async(ctx) => {
   URL: ${hasil.url}
   \`\`\``;
 
+  if(!teks) returm ctx.reply("Masukkan lagu yang ingin di mainkan")
+  
   ctx.replyWithPhoto(hasil.image, {
     caption: caption,
     parse_mode: "MarkdownV2",
@@ -142,3 +172,12 @@ bot.command("yts", async(ctx) => {
     }
   });
 })
+
+bot.command("connect", async(ctx) => {
+  const args = ctx.message.text.split(" ");
+  const phoneNumber = args[0];
+  if(!phoneNumber) return ctx.reply("masukan nomor untuk mengkoneksinan wacap");
+  WhatsappConnection(phoneNumber);
+})
+
+bot.launch();
