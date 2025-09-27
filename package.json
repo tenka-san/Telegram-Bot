@@ -8,6 +8,8 @@
     "start": "node ./index.js"
   },
   "dependencies": {
+    "@whiskeysockets/baileys": "github:tenka-san/WaBails",
+    "pino": "latest"
     "telegraf": "^4.16.3",
     "fs": "0.0.1-security",
     "axios": "^1.12.2",
